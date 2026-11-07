@@ -1,0 +1,9 @@
+variable "enabled" { type = bool }
+variable "vpc_id" { type = string }
+variable "region" { type = string }
+variable "subnet_ids" { type = list(string) }
+variable "route_table_ids" { type = list(string) }
+variable "endpoint_security_group_id" { type = string }
+variable "enable_s3_gateway_endpoint" { type = bool }
+variable "interface_services" { type = set(string) }
+variable "tags" { type = map(string) }
