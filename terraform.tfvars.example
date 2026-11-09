@@ -1,0 +1,67 @@
+# Copy to terraform.tfvars. Replace every placeholder with client-approved values.
+# CIDRs below are documentation-only examples; validate them against the real estate.
+aws_region   = "us-east-1"
+environment  = "prod"
+project_name = "payments-platform"
+
+vpc_name                = "payments-app-vpc-c"
+vpc_cidr                = "10.80.0.0/16"
+availability_zones      = ["us-east-1a", "us-east-1b", "us-east-1c", "us-east-1d"]
+private_subnet_cidrs    = ["10.80.0.0/20", "10.80.16.0/20", "10.80.32.0/20", "10.80.48.0/20"]
+
+vpc_a_id              = "vpc-REPLACE_BANK"
+vpc_a_cidr            = "10.81.0.0/16"
+vpc_a_route_table_ids = ["rtb-REPLACE_BANK_PRIVATE"]
+vpc_a_peer_owner_id   = "111122223333"
+vpc_a_peer_region     = "us-east-1"
+# Use auto only for a compatible same-account request. external requires the
+# VPC A owner to accept the request, then a second full Terraform apply.
+vpc_a_acceptance_mode      = "external"
+vpc_a_manage_remote_routes = true
+
+vpc_b_id              = "vpc-REPLACE_NPCI"
+vpc_b_cidr            = "10.82.0.0/16"
+vpc_b_route_table_ids = ["rtb-REPLACE_NPCI_PRIVATE"]
+vpc_b_peer_owner_id   = "111122223333"
+vpc_b_peer_region     = "us-east-1"
+vpc_b_acceptance_mode      = "external"
+vpc_b_manage_remote_routes = true
+
+vpc_d_id              = "vpc-REPLACE_DATABASE"
+vpc_d_cidr            = "10.83.0.0/16"
+vpc_d_route_table_ids = ["rtb-REPLACE_DATABASE_PRIVATE"]
+vpc_d_peer_owner_id   = "111122223333"
+vpc_d_peer_region     = "us-east-1"
+vpc_d_acceptance_mode      = "external"
+vpc_d_manage_remote_routes = true
+
+enable_vpc_peering      = true
+enable_vpc_endpoints    = true
+enable_s3_gateway_endpoint = true
+
+# The default list covers image pulls, logs, STS, EC2, ELB and Cluster Autoscaler.
+# Add "eks-auth" only for EKS Pod Identity; add "eks" only if private workloads
+# call the EKS service API. Validate costs and dependencies before adding services.
+interface_endpoint_services = ["ecr.api", "ecr.dkr", "logs", "sts", "ec2", "elasticloadbalancing", "autoscaling"]
+
+eks_cluster_name          = "payments-prod-eks"
+eks_kubernetes_version    = "1.33" # Confirm regional support immediately before deployment.
+eks_log_retention_in_days = 90
+# eks_secrets_kms_key_arn = "arn:aws:kms:us-east-1:111122223333:key/REPLACE"
+
+node_instance_types = ["m6i.large"]
+node_disk_size      = 80
+node_desired_size   = 1 # One node in each of four node groups initially.
+node_min_size       = 1
+node_max_size       = 2
+node_capacity_type  = "ON_DEMAND"
+
+# These must be private management-network CIDRs. EKS public endpoint access is disabled.
+trusted_cidrs = ["10.0.0.0/8"]
+allowed_ports = [443, 10250]
+additional_security_group_rules = []
+
+tags = {
+  Owner      = "platform-team"
+  CostCenter = "REPLACE"
+}

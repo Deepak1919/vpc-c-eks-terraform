@@ -1,0 +1,6 @@
+aws_region        = "us-east-1"
+state_bucket_name = "REPLACE-unique-terraform-state-bucket"
+tags = {
+  Project = "payments-platform"
+  Owner   = "platform-team"
+}
